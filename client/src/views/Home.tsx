@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../servises/posts";
 
 function Home() {
-  const navigate = useNavigate();
   const [result, setResult] = useState("");
   const [error, setError] = useState("");
 

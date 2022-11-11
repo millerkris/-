@@ -10,7 +10,7 @@ const tokens = [
 module.exports = {
     getUserIdByToken: (token) => {
         const foundToken = tokens.find(tokenItem => tokenItem.token === token);
-        return foundToken.userId;
+        return foundToken?.userId;
     },
     addToken: (userId) => {
         const token = nanoid();
