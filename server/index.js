@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const nanoid = require("nanoid");
 var cookies = require("cookie-parser");
+const {addUser, getUserByLogin, getUserById} = require("./db/users");
+const {addToken, getUserIdByToken} = require("./db/tokens");
 
 const app = express();
 app.use(express.json());
@@ -14,22 +16,6 @@ app.use(
     })
 );
 
-const users = [
-    {
-        id: nanoid(),
-        login: "123",
-        password: "123"
-    }
-];
-
-const tokens = [
-    {
-        userId: "123123123123",
-        token: "123412341234",
-        createdAt: Date()
-    }
-]
-
 app.get("/", (req, res) => {
     res.status(200).json({ok: true});
 });
@@ -37,37 +23,32 @@ app.get("/", (req, res) => {
 app.get("/user", (req, res) => {
     console.log(req.cookies);
     const token = req.cookies.token;
-    const foundToken = tokens.find(tokenItem => tokenItem.token === token);
-    if (!foundToken) {
+    const userId = getUserIdByToken(token);
+    if (!userId) {
         res.status(401).json({
             message: "Пользователь не авторизован"
         });
     }
 
-    const user = users.find(user => user.id === foundToken.userId);
+    const user = getUserById(userId);
     res.status(200).json(user);
 });
 
 app.post("/user", (req, res) => {
 
-    if (users.find(user => user.login === req.body.login)) {
+    if (getUserByLogin(req.body.login)) {
         res.status(400).json({
             message: "Такой пользователь уже есть"
         });
     }
 
-    const newUser = {
-        id: nanoid(),
-        login: req.body.login,
-        password: req.body.password, // TODO: hash
-    };
-    users.push(newUser);
+    const newUser = addUser(req.body.login, req.body.password);
     res.status(200).json(newUser);
 });
 
 app.post("/auth", (req, res) => {
 
-    const user = users.find(user => user.login === req.body.login);
+    const user = getUserByLogin(req.body.login);
 
     if (!user) {
         return res.status(404).json({
@@ -81,12 +62,7 @@ app.post("/auth", (req, res) => {
         });
     }
 
-    const token = nanoid();
-    tokens.push({
-        userId: user.id,
-        token,
-        createdAt: Date()
-    });
+    const token = addToken(user.id);
     res.cookie("token", token, {
         maxAge: 24 * 60 * 60 * 1000, // TODO: to const
         httpOnly: true,
