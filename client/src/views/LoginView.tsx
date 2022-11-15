@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import LoginForm, { LoginFormData } from "../components/LoginForm/LoginForm";
-import { BASE_URL } from "../servises/posts";
+import { BASE_URL } from "../servises/api";
 
 const LoginView = () => {
   const navigate = useNavigate();

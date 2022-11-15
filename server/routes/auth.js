@@ -23,7 +23,7 @@ authRouter.post("/", (req, res) => {
     res.cookie("token", token, {
         maxAge: 24 * 60 * 60 * 1000, // TODO: to const
         httpOnly: true,
-        sameSite: 'none',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         secure: process.env.NODE_ENV === 'production'
     });
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BASE_URL } from "../servises/posts";
+import { BASE_URL } from "../servises/api";
 
 function Home() {
   const [result, setResult] = useState("");
