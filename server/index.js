@@ -3,6 +3,7 @@ const cors = require('cors');
 const cookies = require("cookie-parser");
 const userRouter = require("./routes/user");
 const authRouter = require("./routes/auth");
+const {initDb} = require("./db/db");
 
 const app = express();
 
@@ -27,6 +28,9 @@ app.use("/auth", authRouter);
 app.use("/user", userRouter);
 
 const port = process.env.PORT || 3001;
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}!`)
-});
+(async () => {
+    await initDb();
+    app.listen(port, () => {
+        console.log(`Example app listening on port ${port}!`)
+    });
+})();
