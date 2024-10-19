@@ -3,6 +3,9 @@ const cors = require('cors');
 const cookies = require("cookie-parser");
 const userRouter = require("./routes/user");
 const authRouter = require("./routes/auth");
+const servicesRouter = require('./routes/services');
+const mastersRouter = require('./routes/masters');
+const appointmentsRouter = require('./routes/appointments');
 const {initDb} = require("./db/db");
 
 const app = express();
@@ -24,8 +27,11 @@ app.get("/", (req, res) => {
     res.status(200).json({ok: true});
 });
 
-app.use("/auth", authRouter);
-app.use("/user", userRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/users', userRouter);
+app.use('/api/services', servicesRouter);
+app.use('/api/masters', mastersRouter);
+app.use('/api/appointments', appointmentsRouter);
 
 const port = process.env.PORT || 3001;
 (async () => {
