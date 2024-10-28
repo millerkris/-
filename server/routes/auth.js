@@ -6,7 +6,7 @@ const {addToken, getUserIdByToken, deleteByToken} = require("../db/tokens");
 
 const COOKIE_NAME = "token";
 
-authRouter.post("/", async (req, res) => {
+authRouter.post("/login", async (req, res) => {
 
     const user = await getUserByLogin(req.body.login);
 

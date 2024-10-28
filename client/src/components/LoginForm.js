@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { TextField, Button, Typography, Box } from '@mui/material';
-import { loginUser } from '../api/api';
+import { loginUser } from '../api';
 
 const LoginForm = () => {
     const [message, setMessage] = useState('');
@@ -18,15 +18,15 @@ const LoginForm = () => {
     });
 
     const handleSubmit = async (values) => {
-        const { login, password } = values; // Извлечение из объекта
+        const { login, password } = values; 
         try {
-          const response = await loginUser(login, password);
-          setMessage(response.message);
-          setMessageType('success'); // Успешный ответ
-      } catch (error) {
-          setMessage(error.message);
-          setMessageType('error'); // Ошибка
-      }
+            await loginUser(login, password); // Вызов функции
+            setMessage('Успешный вход');
+            setMessageType('success'); 
+        } catch (error) {
+            setMessage(error.message);
+            setMessageType('error'); 
+        }
     };
 
     return (

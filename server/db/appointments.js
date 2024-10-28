@@ -7,8 +7,8 @@ module.exports = {
         return await getDb().all(`SELECT * FROM ${TABLE_NAME}`);
     },
 
-    getAppointById: async (id) => {
-        return await getDb().get(`SELECT * FROM ${TABLE_NAME} WHERE id = ?`, id);
+    getAppointById: async (userId) => {
+        return await getDb().all(`SELECT * FROM ${TABLE_NAME} WHERE id = ?`, userId);
     },
 
     addAppoint: async (userId, serviceId, masterId, appointmentDate) => {

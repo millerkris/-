@@ -1,6 +1,6 @@
 const express = require('express');
 const { getUserIdByToken } = require("../db/tokens");
-const { getAppointmentsByUserId, addAppointment, deleteAppointment } = require("../db/appointments");
+const { getAppointById, addAppoint, deleteAppoint } = require("../db/appointments");
 const appointmentsRouter = express.Router();
 
 // Получить все записи текущего пользователя
@@ -10,7 +10,8 @@ appointmentsRouter.get("/", async (req, res) => {
     if (!userId) {
         return res.status(401).json({ message: "Пользователь не авторизован" });
     }
-    const appointments = await getAppointmentsByUserId(userId);
+    const appointments = await getAppointById(userId);
+    console.log('Appointments Data:', appointments);
     res.status(200).json(appointments);
 });
 
@@ -23,14 +24,14 @@ appointmentsRouter.post("/", async (req, res) => {
         return res.status(401).json({ message: "Пользователь не авторизован" });
     }
 
-    const newAppointment = await addAppointment(userId, serviceId, masterId, appointmentDate);
+    const newAppointment = await addAppoint(userId, serviceId, masterId, appointmentDate);
     res.status(201).json(newAppointment);
 });
 
 // Удалить запись по ID
 appointmentsRouter.delete("/:id", async (req, res) => {
     const appointmentId = req.params.id;
-    await deleteAppointment(appointmentId);
+    await deleteAppoint(appointmentId);
     res.status(204).send();
 });
 

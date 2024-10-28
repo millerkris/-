@@ -16,7 +16,7 @@ userRouter.get("/", async (req, res) => {
     res.status(200).json(user);
 });
 
-userRouter.post("/", async (req, res) => {
+userRouter.post("/register", async (req, res) => {
     const user = await getUserByLogin(req.body.login);
     if (user) {
         return res.status(400).json({

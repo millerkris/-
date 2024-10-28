@@ -19,7 +19,7 @@ app.use(cookies());
 app.use(
     cors({
         credentials: true, // чтобы работали secured куки
-        origin: true // автоматом подставляется текущий сервер в Origin
+        origin: "http://localhost:3000" // автоматом подставляется текущий сервер в Origin
     })
 );
 

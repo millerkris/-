@@ -2,8 +2,9 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import LoginForm from './components/LoginForm';
 import RegistrationForm from './components/RegistrationForm';
-import Home from './components/Home';
-import IdInputForm from './components/IdInputForm';
+import MastersPage from './components/MastersPage';
+import ServicesPage from './components/ServicesPage';
+import AppointmentPage from './components/AppointmentPage';
 import { AppBar, Toolbar, Typography, Button } from '@mui/material';
 
 function App() {
@@ -12,16 +13,22 @@ function App() {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>My App</Typography>
-          <Button color="inherit" component={Link} to="/login">Login</Button>
-          <Button color="inherit" component={Link} to="/register">Register</Button>
+          <Button color="inherit" component={Link} to="/api/auth/login">Login</Button>
+          <Button color="inherit" component={Link} to="/api/users/register">Register</Button>
+          <Button color="inherit" component={Link} to="/masters">Мастера</Button>
+          <Button color="inherit" component={Link} to="/services">Услуги</Button>
+          <Button color="inherit" component={Link} to="/appointments">Запись на услуги</Button>
         </Toolbar>
       </AppBar>
 
       
       
       <Routes>
-        <Route path="/login" element={<LoginForm />} />
-        <Route path="/register" element={<RegistrationForm />} />
+        <Route path="/api/auth/login" element={<LoginForm />} />
+        <Route path="/api/users/register" element={<RegistrationForm />} />
+        <Route path="/masters" element={<MastersPage />} />
+        <Route path="/services" element={<ServicesPage />} />
+        <Route path="/appointments" element={<AppointmentPage />} />
       </Routes>
     </BrowserRouter>
   );

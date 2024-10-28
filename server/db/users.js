@@ -18,7 +18,7 @@ module.exports = {
         newUser.id = result.lastID;
         return newUser;
     },
-    getUsers: async () => await getDb().get(`SELECT * FROM ${TABLE_NAME}`),
+    getUsers: async () => await getDb().all(`SELECT * FROM ${TABLE_NAME}`),
     getUserByLogin: async (login) => await getDb().get(`SELECT * FROM ${TABLE_NAME} WHERE login = ?`, login),
     getUserById: async (id) => await getDb().get(`SELECT * FROM ${TABLE_NAME} WHERE id = ?`, id),
 };
