@@ -12,9 +12,9 @@ function App() {
     <BrowserRouter>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>My App</Typography>
-          <Button color="inherit" component={Link} to="/api/auth/login">Login</Button>
-          <Button color="inherit" component={Link} to="/api/users/register">Register</Button>
+          <Typography variant="h6" sx={{ flexGrow: 1 }}>Салон красоты</Typography>
+          <Button color="inherit" component={Link} to="/api/auth/login">Авторизация</Button>
+          <Button color="inherit" component={Link} to="/api/users/register">Регистрация</Button>
           <Button color="inherit" component={Link} to="/masters">Мастера</Button>
           <Button color="inherit" component={Link} to="/services">Услуги</Button>
           <Button color="inherit" component={Link} to="/appointments">Запись на услуги</Button>

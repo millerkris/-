@@ -74,12 +74,6 @@ export const createAppointment = async (serviceId, masterId, appointmentDate,tok
 };
 
 
-export const getTokenFromCookies = () => {
-    const match = document.cookie.match(/(^|;)\s*token=([^;]+)/);
-    return match ? match[2] : null;
-};
-
-
 export const fetchUserAppointments = async () => {
     const token = getTokenFromCookies(); // Получите токен из кук
     const response = await fetch(`${API_BASE_URL}/appointments`, {
@@ -97,4 +91,45 @@ export const fetchUserAppointments = async () => {
     }
 
     return await response.json();
+};
+
+export const addMaster = async (name, speciality, experience) => {
+    const response = await fetch(`${API_BASE_URL}/masters`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ name, speciality, experience }),
+    });
+
+    if (!response.ok) {
+        const errorResponse = await response.json();
+        throw new Error(errorResponse.message || 'Ошибка при добавлении мастера');
+    }
+
+    return await response.json();
+};
+
+export const addService = async (name, time, price) => {
+    const response = await fetch(`${API_BASE_URL}/services`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ name, time, price }),
+    });
+
+    if (!response.ok) {
+        const errorResponse = await response.json();
+        throw new Error(errorResponse.message || 'Ошибка при добавлении услуги');
+    }
+
+    return await response.json();
+};
+
+export const getTokenFromCookies = () => {
+    const match = document.cookie.match(/(^|;)\s*token=([^;]+)/);
+    return match ? match[2] : null;
 };
