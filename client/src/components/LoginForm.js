@@ -20,7 +20,7 @@ const LoginForm = () => {
     const handleSubmit = async (values) => {
         const { login, password } = values; 
         try {
-            await loginUser(login, password); // Вызов функции
+            await loginUser(login, password); 
             setMessage('Успешный вход');
             setMessageType('success'); 
         } catch (error) {
@@ -38,7 +38,7 @@ const LoginForm = () => {
                 onSubmit={handleSubmit}
             >
                 {({ handleChange, handleBlur }) => (
-                    <Form>
+                    <Form>  
                         <Box sx={{ mb: 2 }}>
                             <Field name="login">
                                 {({ field }) => (

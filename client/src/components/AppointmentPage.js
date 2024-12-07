@@ -1,130 +1,163 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Typography, TextField, Button, FormControl, InputLabel, Select, MenuItem, CircularProgress } from '@mui/material';
-import { fetchServices, fetchMasters, createAppointment,fetchUserAppointments} from '../api';
+import {
+    Container,
+    Typography,
+    List,
+    ListItem,
+    ListItemText,
+    CircularProgress,
+    Snackbar,
+    TextField,
+    Button,
+    Select,
+    MenuItem,
+    InputLabel,
+    FormControl
+} from '@mui/material';
+import { fetchMasters, fetchServices, createAppointment, fetchUserAppointments, deleteAppointment } from '../api'; 
 
 const AppointmentPage = () => {
-    const [services, setServices] = useState([]);
     const [masters, setMasters] = useState([]);
-    const [appointments, setAppointments] = useState([]); 
-    const [selectedService, setSelectedService] = useState('');
-    const [selectedMaster, setSelectedMaster] = useState('');
-    const [appointmentDate, setAppointmentDate] = useState('');
+    const [services, setServices] = useState([]);
+    const [appointments, setAppointments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [message, setMessage] = useState('');
     const [messageType, setMessageType] = useState('');
-    
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [selectedMaster, setSelectedMaster] = useState('');
+    const [selectedService, setSelectedService] = useState('');
+    const [appointmentDate, setAppointmentDate] = useState('');
+
     useEffect(() => {
-        const loadServicesAndMasters = async () => {
+        const loadData = async () => {
             try {
-                const servicesData = await fetchServices();
                 const mastersData = await fetchMasters();
-                setServices(servicesData);
+                const servicesData = await fetchServices();
+                const userAppointments = await fetchUserAppointments();
+
                 setMasters(mastersData);
+                setServices(servicesData);
+                setAppointments(userAppointments);
             } catch (error) {
                 setMessage(error.message);
                 setMessageType('error');
+                setSnackbarOpen(true);
             } finally {
                 setLoading(false);
             }
         };
-    
-        loadServicesAndMasters();
-        loadUserAppointments(); 
+
+        loadData();
     }, []);
 
+    const handleSnackbarClose = () => {
+        setSnackbarOpen(false);
+    };
 
-    const loadUserAppointments = async () => {
+    const handleAppointmentCreate = async (e) => {
+        e.preventDefault();
         try {
-            const appointmentsData = await fetchUserAppointments();
-            if (!Array.isArray(appointmentsData)) {
-                throw new Error('Полученные данные не являются массивом.');
-            }
-            setAppointments(appointmentsData);
+            const newAppointment = await createAppointment(selectedService, selectedMaster, appointmentDate);
+            setAppointments((prevAppointments) => [...prevAppointments, newAppointment]);
+            setSelectedMaster('');
+            setSelectedService('');
+            setAppointmentDate('');
+            setMessage('Запись создана успешно!');
+            setMessageType('success');
+            setSnackbarOpen(true);
         } catch (error) {
             setMessage(error.message);
             setMessageType('error');
+            setSnackbarOpen(true);
         }
     };
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        if (!selectedService || !selectedMaster || !appointmentDate) {
-            setMessage('Пожалуйста, заполните все поля.');
-            setMessageType('error');
-            return;
-        }
+    const handleDeleteAppointment = async (id) => {
         try {
-            await createAppointment(selectedService, selectedMaster, appointmentDate);
-            setMessage('Запись успешно создана!');
+            await deleteAppointment(id);
+            setAppointments((prevAppointments) => prevAppointments.filter(appointment => appointment.id !== id));
+            setMessage('Запись удалена успешно!');
             setMessageType('success');
-            loadUserAppointments(); 
+            setSnackbarOpen(true);
         } catch (error) {
-            setMessage('Ошибка при создании записи: ' + error.message);
+            setMessage(error.message);
             setMessageType('error');
-        } 
+            setSnackbarOpen(true);
+        }
     };
-
 
     return (
         <Container>
-            <Typography variant="h4" gutterBottom>Запись на услугу</Typography>
+            <Typography variant="h4" gutterBottom>Записаться на услугу</Typography>
             {loading ? (
                 <CircularProgress />
             ) : (
-                <form onSubmit={handleSubmit}>
-                    <FormControl fullWidth variant="outlined" margin="normal">
-                        <InputLabel>Выберите услугу</InputLabel>
-                        <Select
-                            value={selectedService}
-                            onChange={(e) => setSelectedService(e.target.value)}
-                            label="Выберите услугу"
-                        >
-                            {services.map(service => (
-                                <MenuItem key={service.id} value={service.id}>{service.name}</MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                    <FormControl fullWidth variant="outlined" margin="normal">
-                        <InputLabel>Выберите мастера</InputLabel>
-                        <Select
-                            value={selectedMaster}
-                            onChange={(e) => setSelectedMaster(e.target.value)}
-                            label="Выберите мастера"
-                        >
-                            {masters.map(master => (
-                                <MenuItem key={master.id} value={master.id}>{master.name}</MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                    <TextField
-                        type="datetime-local"
-                        fullWidth
-                        margin="normal"
-                        value={appointmentDate}
-                        onChange={(e) => setAppointmentDate(e.target.value)}
-                    />
-                    <Button type="submit" variant="contained" color="primary">Записаться</Button>
-                    {message && (
-                            <Typography color={messageType === 'error' ? 'error' : 'success'}>
-                                {message}
-                            </Typography>
-                        )} 
-                </form>
-            )}
-             {/* Список всех записей пользователя */}
-             <Typography variant="h5" gutterBottom>Ваши записи</Typography>
-            {appointments.length === 0 ? (
-                <Typography>Вы пока не записаны на процедуры.</Typography>
-            ) : (
-                <ul>
-                    {appointments.map(appointment => (
-                        <li key={appointment.id}>
-                            {`Услуга: ${appointment.serviceName}, Мастер: ${appointment.masterName}, Дата: ${new Date(appointment.appointmentDate).toLocaleString()}`}
-                        </li>
-                    ))}
-                </ul>
-            )}
+                <>
+                    {/* Форма создания новой записи */}
+                    <form onSubmit={handleAppointmentCreate} style={{ marginBottom: '20px', display: 'flex', flexDirection: 'column' }}>
+                        <FormControl required>
+                            <InputLabel id="master-select-label">Мастер</InputLabel>
+                            <Select
+                                labelId="master-select-label"
+                                value={selectedMaster}
+                                onChange={(e) => setSelectedMaster(e.target.value)}
+                            >
+                                {masters.length > 0 ? (
+                                    masters.map(master => (
+                                        <MenuItem key={master.id} value={master.id}>{master.name}</MenuItem>
+                                    ))
+                                ) : (
+                                    <MenuItem disabled>No masters available</MenuItem>
+                                )}
+                            </Select>
+                        </FormControl>
+                        <FormControl required>
+                            <InputLabel id="service-select-label">Услуга</InputLabel>
+                            <Select
+                                labelId="service-select-label"
+                                value={selectedService}
+                                onChange={(e) => setSelectedService(e.target.value)}
+                            >
+                                {services.length > 0 ? (
+                                    services.map(service => (
+                                        <MenuItem key={service.id} value={service.id}>{service.name}</MenuItem>
+                                    ))
+                                ) : (
+                                    <MenuItem disabled>No services available</MenuItem>
+                                )}
+                            </Select>
+                        </FormControl>
+                        <TextField
+                            label="Дата и время записи"
+                            type="datetime-local"
+                            value={appointmentDate}
+                            onChange={(e) => setAppointmentDate(e.target.value)}
+                            required
+                        />
+                        <Button type="submit" variant="contained" style={{ marginTop: '10px' }}>Создать запись</Button>
+                    </form>
 
+                    {/* Список записей пользователя */}
+                    <List>
+                        {appointments.map(appointment => (
+                            <ListItem key={appointment.id}>
+                                <ListItemText
+                                    primary={`Услуга: ${services.find(service => service.id === appointment.serviceId)?.name || 'Неизвестно'}, Мастер: ${masters.find(master => master.id === appointment.masterId)?.name || 'Неизвестно'}, Дата: ${new Date(appointment.appointmentDate).toLocaleString()}`}
+                                />
+                                <Button onClick={() => handleDeleteAppointment(appointment.id)} color="secondary">Удалить</Button>
+                            </ListItem>
+                        ))}
+                    </List>
+
+                    <Snackbar
+                        open={snackbarOpen}
+                        autoHideDuration={6000}
+                        onClose={handleSnackbarClose}
+                        message={message}
+                        severity={messageType}
+                    />
+                </>
+            )}
         </Container>
     );
 };

@@ -16,7 +16,7 @@ authRouter.post("/login", async (req, res) => {
         });
     }
 
-    if (user.password !== md5(req.body.password)) { // TODO: hash
+    if (user.password !== md5(req.body.password)) { 
         return res.status(400).json({
             message: "Пароль неверный"
         });
@@ -24,7 +24,7 @@ authRouter.post("/login", async (req, res) => {
 
     const token = await addToken(user.id);
     res.cookie(COOKIE_NAME, token, {
-        maxAge: 24 * 60 * 60 * 1000, // TODO: to const
+        maxAge: 24 * 60 * 60 * 1000, 
         httpOnly: true,
         sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         secure: process.env.NODE_ENV === 'production'

@@ -7,8 +7,9 @@ module.exports = {
     TABLE_NAME,
     getUserIdByToken: async (token) => {
         const result = await getDb().get(`SELECT * FROM ${TABLE_NAME} WHERE token = ?`, token);
-        return result?.userId;
+        return result? result.userId : null;
     },
+    
     deleteByToken: async (token) => {
         await getDb().get(`DELETE FROM ${TABLE_NAME} WHERE token = ?`, token);
     },

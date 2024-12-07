@@ -25,7 +25,7 @@ const RegistrationForm = () => {
     const handleSubmit = async (values) => {
         const { login, password } = values; 
         try {
-            await registerUser(login, password); // Вызов функции
+            await registerUser(login, password); 
             setMessage('Успешная регистрация');
             setMessageType('success'); 
         } catch (error) {
@@ -35,7 +35,7 @@ const RegistrationForm = () => {
     };
 
     return (
-        <Box sx={{ mt: 2 }}>
+        <Box sx={{ mt: 2 }} >
             <Typography variant="h5">Форма регистрации</Typography>
             <Formik
                 initialValues={{ login: '', password: '', confirmPassword: '' }}
