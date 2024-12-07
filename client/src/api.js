@@ -132,6 +132,7 @@ export const addService = async (name, time, price) => {
 export const getTokenFromCookies = () => {
     const match = document.cookie.match(/(^|;)\s*token=([^;]+)/);
     return match ? match[2] : null;
+<<<<<<< HEAD
 };
 
 export const deleteAppointment = async (id) => {
@@ -149,4 +150,6 @@ export const deleteAppointment = async (id) => {
         const errorResponse = await response.json();
         throw new Error(errorResponse.message || 'Ошибка при удалении записи');
     }
+=======
+>>>>>>> origin/main
 };

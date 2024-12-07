@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Typography, List, ListItem, ListItemText, CircularProgress, Snackbar, TextField, Button } from '@mui/material';
+<<<<<<< HEAD
 import { fetchServices, addService } from '../api'; 
 
 const ServicesPage = () => {
@@ -10,11 +11,27 @@ const ServicesPage = () => {
     const [snackbarOpen, setSnackbarOpen] = useState(false); 
 
    
+=======
+import { fetchServices, addService } from '../api'; // Импортируем функции API
+
+const ServicesPage = () => {
+    const [services, setServices] = useState([]); // Список услуг
+    const [loading, setLoading] = useState(true); // Состояние загрузки
+    const [message, setMessage] = useState(''); // Сообщение для Snackbar
+    const [messageType, setMessageType] = useState(''); // Тип сообщения
+    const [snackbarOpen, setSnackbarOpen] = useState(false); // Открытие Snackbar
+
+    // Состояния для формы добавления услуги
+>>>>>>> origin/main
     const [name, setName] = useState('');
     const [time, setTime] = useState('');
     const [price, setPrice] = useState('');
 
+<<<<<<< HEAD
    
+=======
+    // Загрузка списка услуг при монтировании компонента
+>>>>>>> origin/main
     useEffect(() => {
         const loadServices = async () => {
             try {
@@ -40,7 +57,11 @@ const ServicesPage = () => {
         e.preventDefault();
         try {
             const newService = await addService(name, time, price);
+<<<<<<< HEAD
             setServices((prevServices) => [...prevServices, newService]); 
+=======
+            setServices((prevServices) => [...prevServices, newService]); // Обновляем список услуг
+>>>>>>> origin/main
             setName('');
             setTime('');
             setPrice('');
@@ -106,3 +127,4 @@ const ServicesPage = () => {
 };
 
 export default ServicesPage;
+
