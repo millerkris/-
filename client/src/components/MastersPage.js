@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Typography, List, ListItem, ListItemText, CircularProgress, Snackbar, TextField, Button } from '@mui/material';
-<<<<<<< HEAD
+
 import { fetchMasters } from '../api'; 
 import { addMaster } from '../api'; 
 
@@ -10,30 +10,15 @@ const MastersPage = () => {
     const [message, setMessage] = useState(''); 
     const [messageType, setMessageType] = useState(''); 
     const [snackbarOpen, setSnackbarOpen] = useState(false); 
-
-    
-=======
-import { fetchMasters } from '../api'; // Путь к вашему API
-import { addMaster } from '../api'; // Импортируем функцию добавления мастера
-
-const MastersPage = () => {
-    const [masters, setMasters] = useState([]); // Список мастеров
-    const [loading, setLoading] = useState(true); // Состояние загрузки
-    const [message, setMessage] = useState(''); // Сообщение для Snackbar
-    const [messageType, setMessageType] = useState(''); // Тип сообщения
-    const [snackbarOpen, setSnackbarOpen] = useState(false); // Открытие Snackbar
-
-    // Состояния для формы добавления мастера
->>>>>>> origin/main
     const [name, setName] = useState('');
     const [speciality, setSpeciality] = useState('');
     const [experience, setExperience] = useState('');
 
-<<<<<<< HEAD
+
     
-=======
+
     // Загрузка списка мастеров при монтировании компонента
->>>>>>> origin/main
+
     useEffect(() => {
         const loadMasters = async () => {
             try {
@@ -59,11 +44,8 @@ const MastersPage = () => {
         e.preventDefault();
         try {
             const newMaster = await addMaster(name, speciality, experience);
-<<<<<<< HEAD
+
             setMasters((prevMasters) => [...prevMasters, newMaster]); 
-=======
-            setMasters((prevMasters) => [...prevMasters, newMaster]); // Обновляем список мастеров
->>>>>>> origin/main
             setName('');
             setSpeciality('');
             setExperience('');
